@@ -4,8 +4,7 @@ class Util:
     def changeTurn(turno):
         if turno == 1:
             return turno + 1
-        elif turno == 2:
-            return turno - 1
+        return turno - 1
 
     @staticmethod
     def getValueToWrite(turn):

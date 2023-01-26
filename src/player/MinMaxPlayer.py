@@ -1,6 +1,7 @@
-from Util import Util
+from src.Util import Util
+from src.player.Player import Player
 
-class MinMaxPlayer:
+class MinMaxPlayer(Player):
     
     @staticmethod
     def simulate(board, turn, depth):
@@ -48,3 +49,6 @@ class MinMaxPlayer:
             return (val, depth)
             
         return choiceNextStep(choices, turn, depth)
+    
+    def play(self, board):
+        return MinMaxPlayer.simulate(board, self.turn, 0)
