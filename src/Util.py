@@ -7,9 +7,12 @@ class Util:
         return turno - 1
 
     @staticmethod
+    def getPossibleValues():
+        return ['U','X', 'O']
+    
+    @staticmethod
     def getValueToWrite(turn):
-        chars = ['X', 'O']
-        return chars[turn - 1]
+        return Util.getPossibleValues()[turn]
 
     @staticmethod
     def getValue(board, row, col):

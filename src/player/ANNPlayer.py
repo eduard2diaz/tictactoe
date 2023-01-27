@@ -1,27 +1,30 @@
+import numpy as np
 import keras
+from src.Util import Util
 from src.player.Player import Player
-from src.player.ANNPlayer import ANNPlayer
-from src.game.GameTerminal import GameTerminal
 
 class ANNPlayer(Player):
+
     def __init__(self, name, turn=None) -> None:
         super().__init__(name, turn)
 
-        model = keras.Sequential()
-        model.add(keras.layers.Dense(11, input_shape=(9,), activation = 'softmax'))
-        model.compile(optimizer=keras.optimizers.Adam(1e-3),
-                        loss="binary_crossentropy",
+        #Input: first 9 positions are the cells and 10th position is the turn of the player
+        #Output: 9 possible rewards in base of position
+        
+        self.model = keras.Sequential()
+        self.model.add(keras.layers.Dense(9, input_shape=(10,), activation = 'softmax'))
+        self.model.compile(optimizer='SGD',
+                        loss="mae",
                         metrics=["accuracy"])
-        self.model = model
-
-    
-
-    def fit(self):
-        auxPlayer = ANNPlayer()
-        for _ in range(200):
-            game = GameTerminal(self, auxPlayer)
-            game.play()
-
-
+        
     def play(self, board):
-        prediction = self.model.predict(board)   
+        _X = [Util.getPossibleValues().index(char) for char in board]
+        _X.append(self.turn)
+        prediction = self.model.predict([_X]) 
+        prediction_index = np.argmax(prediction, axis=1)[0]        
+        row = prediction_index//3
+        col = prediction_index%3
+        print(f'{self.name}: prediction-> {prediction} \
+              prediction_index->{prediction_index} \
+              row-> {row} col-> {col}') 
+        return row, col
